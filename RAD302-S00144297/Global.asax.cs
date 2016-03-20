@@ -18,6 +18,9 @@ namespace RAD302_S00144297
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
+
+            //configure the mappings on start up
+            AutoMapperConfigurations.Configure();
         }
     }
 }

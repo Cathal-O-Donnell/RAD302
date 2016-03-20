@@ -26,7 +26,7 @@ namespace RAD302_S00144297.DAL
         {
             var employees = db.Employees.Include(em => em.Territories).ToList();
             //mapping
-           // var mapper = AutoMapperConfigurations.Configuration.CreateMapper();
+           var mapper = AutoMapperConfigurations.Configuration.CreateMapper();
 
             return mapper.Map<List<EmployeeDetail>>(employees);
         }
@@ -52,15 +52,6 @@ namespace RAD302_S00144297.DAL
 
             var mapper = AutoMapperConfigurations.Configuration.CreateMapper();
             return mapper.Map<List<EmployeeDetail>>(employees);
-
-
         }
     }
 }
-
-//namespace RAD302_S00144297.DAL
-//{
-//    interface EmployeeRepository
-//    {
-//    }
-//}

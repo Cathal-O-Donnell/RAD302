@@ -48,3 +48,10 @@ C:\Users\catha_000\Desktop\RAD302\RAD302-S00144297\RAD302-S00144297\bin\Antlr3.R
 C:\Users\catha_000\Desktop\RAD302\RAD302-S00144297\RAD302-S00144297\obj\Debug\RAD302-S00144297.csprojResolveAssemblyReference.cache
 C:\Users\catha_000\Desktop\RAD302\RAD302-S00144297\RAD302-S00144297\obj\Debug\RAD302-S00144297.dll
 C:\Users\catha_000\Desktop\RAD302\RAD302-S00144297\RAD302-S00144297\obj\Debug\RAD302-S00144297.pdb
+C:\Users\catha_000\Desktop\RAD302\RAD302-S00144297\RAD302-S00144297\bin\AutoMapper.dll
+C:\Users\catha_000\Desktop\RAD302\RAD302-S00144297\RAD302-S00144297\bin\AutoMapper.EF6.dll
+C:\Users\catha_000\Desktop\RAD302\RAD302-S00144297\RAD302-S00144297\bin\DelegateDecompiler.dll
+C:\Users\catha_000\Desktop\RAD302\RAD302-S00144297\RAD302-S00144297\bin\DelegateDecompiler.EntityFramework.dll
+C:\Users\catha_000\Desktop\RAD302\RAD302-S00144297\RAD302-S00144297\bin\Mono.Reflection.dll
+C:\Users\catha_000\Desktop\RAD302\RAD302-S00144297\RAD302-S00144297\bin\AutoMapper.xml
+C:\Users\catha_000\Desktop\RAD302\RAD302-S00144297\RAD302-S00144297\bin\AutoMapper.EF6.xml
