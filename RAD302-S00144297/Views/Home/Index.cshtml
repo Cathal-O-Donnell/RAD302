@@ -1,18 +1,64 @@
 ﻿
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDpswHcF-6hQRysnIaTEdls4l8ATwq4x88"></script>
 
+@*Welcome Message Style - Move to style page*@
+<style>
+    #fvpp-blackout {
+        display: none;
+        z-index: 499;
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        background: #000;
+        opacity: 0.5;
+    }
+
+    #my-welcome-message {
+        display: none;
+        z-index: 500;
+        position: fixed;
+        width: 36%;
+        left: 30%;
+        top: 20%;
+        padding: 20px 2%;
+        font-family: Calibri, Arial, sans-serif;
+        background: #FFF;
+    }
+
+    #fvpp-close {
+        position: absolute;
+        top: 10px;
+        right: 20px;
+        cursor: pointer;
+    }
+
+    #fvpp-dialog h2 {
+        font-size: 2em;
+        margin: 0;
+    }
+
+    #fvpp-dialog p {
+        margin: 0;
+    }
+</style>
+
+
 <head>
     <title>Bootstrap Example</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
 </head>
 
 @*To do list:
-1. Partial View for map and directions, use a controller method to generate lon and lat values for map centre 
-2. Week71
-3. JQuery 
-4. LINQ*@
+    1. Partial View for map and directions, use a controller method to generate lon and lat values for map centre
+    2. Week71
+    3. JQuery
+    4. LINQ
+    5. Clear Customers
+    6. Change Javascript
+*@
 
 <body>
 
@@ -20,16 +66,28 @@
         <h1 style="color: #3399ff; text-align: center; font-size: 130px;" 1>Route Planner</h1>
         <h2 style="text-align:center;">Get from <span style="font-weight:bold; color:#00bfff;font-weight:bold">A</span> to <span style="color:#33ff33;font-weight:bold">B</span> without the hastle</h2>
         <h3 style="text-align:center; color:#ff3333"><del>No more struggling with maps</del></h3>
+        <div style=" text-align: center;">
+            <input type="button" class="btn btn-primary" value="Get Started" onclick="GetInfo();" />
+        </div>
 
+        <div style="text-align:center">
+            <input type="button" class="btn btn-info" id="btnInstructions" value="Instructions" />
+        </div>
     </div>
     <div class="row">
         <div class="col-md-4">
             <h2 style="color:#33ff33; font-weight:bold" title="Select the start location for your journey from the list below">Starting Point</h2>
             <select class="form-control" id="lstStart">
-                <option value="Halifax, NS">Halifax, NS</option>
-                <option value="Boston, MA">Boston, MA</option>
-                <option value="New York, NY">New York, NY</option>
-                <option value="Miami, FL">Miami, FL</option>
+                <option value="Sligo, Ireland">Sligo, Ireland</option>
+                <option value="Cork, Ireland">Cork, Ireland</option>
+                <option value="Galway, Ireland">Galway, Ireland</option>
+                <option value="Limrick, Ireland">Limrick, Ireland</option>
+                <option value="Dublin, Ireland">Dublin, Ireland</option>
+                <option value="Waterford, Ireland">Waterford, Ireland</option>
+                <option value="Kilkenny, Ireland">Kilkenny, Ireland</option>
+                <option value="Manhester, England">Manhester, England</option>
+                <option value="Liverpool, England">Liverpool, England</option>
+                <option value="London, England">London, England</option>
             </select>
         </div>
 
@@ -37,24 +95,33 @@
             <h2 style="color:#ffcc00;font-weight:bold" title="You can use waypoints to calculate routes through additional locations">Waypoints</h2>
             <i style="opacity: 0.7">(Ctrl-Click for multiple selection)</i>
             <br>
-            <select multiple class="form-control" id="waypoints">
-                <option value="montreal, quebec">Montreal, QBC</option>
-                <option value="toronto, ont">Toronto, ONT</option>
-                <option value="chicago, il">Chicago</option>
-                <option value="winnipeg, mb">Winnipeg</option>
-                <option value="fargo, nd">Fargo</option>
-                <option value="calgary, ab">Calgary</option>
-                <option value="spokane, wa">Spokane</option>
+            <select multiple class="form-control" id="lstWaypoints">
+                <option value="Sligo, Ireland">Sligo, Ireland</option>
+                <option value="Cork, Ireland">Cork, Ireland</option>
+                <option value="Galway, Ireland">Galway, Ireland</option>
+                <option value="Limrick, Ireland">Limrick, Ireland</option>
+                <option value="Dublin, Ireland">Dublin, Ireland</option>
+                <option value="Waterford, Ireland">Waterford, Ireland</option>
+                <option value="Kilkenny, Ireland">Kilkenny, Ireland</option>
+                <option value="Manhester, England">Manhester, England</option>
+                <option value="Liverpool, England">Liverpool, England</option>
+                <option value="London, England">London, England</option>
             </select>
         </div>
 
         <div class="col-md-4">
             <h2 style="color:#ff3333; font-weight:bold" title="Select the end location of your journey from the list below">End Point</h2>
             <select class="form-control" id="lstEnd">
-                <option value="Vancouver, BC">Vancouver, BC</option>
-                <option value="Seattle, WA">Seattle, WA</option>
-                <option value="San Francisco, CA">San Francisco, CA</option>
-                <option value="Los Angeles, CA">Los Angeles, CA</option>
+                <option value="London, England">London, England</option>
+                <option value="Liverpool, England">Liverpool, England</option>
+                <option value="Manhester, England">Manhester, England</option>
+                <option value="Kilkenny, Ireland">Kilkenny, Ireland</option>
+                <option value="Waterford, Ireland">Waterford, Ireland</option>
+                <option value="Dublin, Ireland">Dublin, Ireland</option>
+                <option value="Limrick, Ireland">Limrick, Ireland</option>
+                <option value="Galway, Ireland">Galway, Ireland</option>
+                <option value="Cork, Ireland">Cork, Ireland</option>
+                <option value="Sligo, Ireland">Sligo, Ireland</option>                                          
             </select>
         </div>
     </div>
@@ -63,55 +130,142 @@
     <br />
 
     <div style=" text-align: center;">
-        @*<input type="submit" id="submit" class="btn btn-success" style="position: absolute;">*@
-        <button onclick="myFunction()" class="btn btn-success" >Get Directions</button>
+        <button onclick="GetDirections()" class="btn btn-success">Plan Route</button>
     </div>
 
     <br />
     <br />
 
 
-    <div style="width: 600px;">
-        <div id="map" style="width: 280px; height: 400px; float: left;"></div>
-        <div id="panel" style="width: 300px; float: right;"></div>
+    <div id="MapDirectionsContainer" style="width: 750px;">
+        <h2 id="txtDirections"></h2>
+        <div id="map" style="width: 450px; height: 560px; float: left;"></div>
+        <div id="dir" style="width: 300px; float: right;"></div>
+    </div>
+
+    @*Welcome Message*@
+    <div id="my-welcome-message">
+        <h1 style="text-align:center;">Welcome to <span style="color:#3399ff">Route Planner</span></h1>
+        <h2 style="text-align:center">A project by <span style="color:lightgreen">Cathal O'Donnell</span></h2>
+        <h4 style="text-align:center">This project uses the <span style="color:lightgreen">Google Directions API </span>to give a set of directions from one location to another</h4>
+    </div>
+
+    @*JQueryUI Dialog Modal*@
+    <div id="dialog" title="Instructions">
+        <h3>This is a basic guide on how to use this feature</h3>
+        <ol>
+            <li> Click the <span style="color: blue">Get Started </span>button to populate the select lists with items</li>
+            <li> Select the location from which your journey will begin from the <span style="color:#33ff33">Starting Point</span> list</li>
+            <li> If you have any waypoints that your journey must include, you can select these from the <span style="color:#ffcc00">Waypoints</span> list</li>
+            <li> Select your end location from the <span style="color:#ff3333">End Point</span> list</li>
+            <li> Click the <span style="color:lightgreen">Plan Route</span> button to generate your route</li>
+        </ol>
     </div>
 
 </body>
 
-<script type="text/javascript">
-    function myFunction() {
+@section Scripts {
+    @*JQuery UI Styles*@
+    <link href="~/Content/themes/base/all.css" rel="stylesheet" />
+    <link href="~/Content/themes/base/theme.css" rel="stylesheet" />
 
-        var directionsService = new google.maps.DirectionsService();
-        var directionsDisplay = new google.maps.DirectionsRenderer();
-
-        //Get start and End points that the user selected
-        var startLocation = document.getElementById('lstStart').value;
-        var endLocation = document.getElementById('lstEnd').value;
-
-        var map = new google.maps.Map(document.getElementById('map'), {
-            zoom: 7,
-            mapTypeId: google.maps.MapTypeId.ROADMAP
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/JQueryUI")
+    @Scripts.Render("~/bundles/jqueryFirstVisitPopup")
+    <script type="text/javascript">
+        //Welcome Message
+        $('#my-welcome-message').firstVisitPopup({
+            cookieName: 'homepagekkamnnnb',
+            showAgainSelector: '#show-message'
         });
 
-        directionsDisplay.setMap(map);
-        directionsDisplay.setPanel(document.getElementById('panel'));
+        //JQuery UI
+        $("#dialog").dialog({ autoOpen: false });
 
-        var request = {
-            origin: startLocation,
-            destination: endLocation,
-            travelMode: google.maps.DirectionsTravelMode.DRIVING
+        $('#btnInstructions').click(function () {
+            $('#dialog').dialog('open');
+        });
+
+        var webApiUri = "http://localhost:57424/api/employees/";
+
+        function GetInfo() {
+            $('#lstStart').empty(),
+            $('#lstWaypoints').empty(),
+            $('#lstEnd').empty();
+
+            $.ajax(
+                {
+                    type: 'GET',
+                    url: webApiUri,
+                    dataType: "json",
+                    processData: true,
+                    success: function (data, status) {
+                        $.each(data, function (key, item) {
+                            $('<option>', { text: item.City }).appendTo('#lstStart'),
+                            $('<option>', { text: item.City }).appendTo('#lstWaypoints'),
+                            $('<option>', { text: item.City }).appendTo('#lstEnd');
+                        })
+                    },
+                    error: function () { alert('Error') }
+                })
         };
 
-        directionsService.route(request, function (response, status) {
-            if (status == google.maps.DirectionsStatus.OK) {
-                directionsDisplay.setDirections(response);
+
+        function GetDirections() {
+
+            //Clear last directions
+            document.getElementById('dir').innerHTML = "";
+
+            var directionsService = new google.maps.DirectionsService();
+            var directionsDisplay = new google.maps.DirectionsRenderer();
+
+            //Get start and End points that the user selected
+            var startLocation = document.getElementById('lstStart').value;
+            var endLocation = document.getElementById('lstEnd').value;
+
+            //Heading text
+            txtDirections.innerHTML = "Directions from " + startLocation + " to " + endLocation;
+
+            //Waypoints
+            var waypts = [];
+            var checkboxArray = document.getElementById('lstWaypoints');
+
+            for (var i = 0; i < checkboxArray.length; i++) {
+                if (checkboxArray.options[i].selected) {
+                    waypts.push({
+                        location: checkboxArray[i].value,
+                        stopover: true
+                    });
+                }
             }
-        });
-    }
-</script> 
 
+            var map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 7,
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+            });
 
-    @*<script>
+            directionsDisplay.setMap(map);
+            directionsDisplay.setPanel(document.getElementById('dir'));
+
+            var request = {
+                origin: startLocation,
+                destination: endLocation,
+                waypoints: waypts,
+                optimizeWaypoints: true,
+
+                travelMode: google.maps.DirectionsTravelMode.DRIVING
+            };
+
+            directionsService.route(request, function (response, status) {
+                if (status == google.maps.DirectionsStatus.OK) {
+                    directionsDisplay.setDirections(response);
+                }
+            });
+        }
+    </script>
+}
+
+@*<script>
         function myFunction() {
 
             // Array of stylin for map
@@ -174,59 +328,59 @@
 
 
 
-    @*<script>
-            function initMap() {
-                var directionsService = new google.maps.DirectionsService;
-                var directionsDisplay = new google.maps.DirectionsRenderer;
-                var map = new google.maps.Map(document.getElementById('map'), {
-                    zoom: 6,
-                    center: { lat: 41.85, lng: -87.65 }
-                });
-                directionsDisplay.setMap(map);
+@*<script>
+        function initMap() {
+            var directionsService = new google.maps.DirectionsService;
+            var directionsDisplay = new google.maps.DirectionsRenderer;
+            var map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 6,
+                center: { lat: 41.85, lng: -87.65 }
+            });
+            directionsDisplay.setMap(map);
 
-                document.getElementById('submit').addEventListener('click', function () {
-                    calculateAndDisplayRoute(directionsService, directionsDisplay);
-                });
-            }
+            document.getElementById('submit').addEventListener('click', function () {
+                calculateAndDisplayRoute(directionsService, directionsDisplay);
+            });
+        }
 
-            function calculateAndDisplayRoute(directionsService, directionsDisplay) {
-                var waypts = [];
-                var checkboxArray = document.getElementById('waypoints');
-                for (var i = 0; i < checkboxArray.length; i++) {
-                    if (checkboxArray.options[i].selected) {
-                        waypts.push({
-                            location: checkboxArray[i].value,
-                            stopover: true
-                        });
-                    }
+        function calculateAndDisplayRoute(directionsService, directionsDisplay) {
+            var waypts = [];
+            var checkboxArray = document.getElementById('waypoints');
+            for (var i = 0; i < checkboxArray.length; i++) {
+                if (checkboxArray.options[i].selected) {
+                    waypts.push({
+                        location: checkboxArray[i].value,
+                        stopover: true
+                    });
                 }
-
-                directionsService.route({
-                    origin: document.getElementById('start').value,
-                    destination: document.getElementById('end').value,
-                    waypoints: waypts,
-                    optimizeWaypoints: true,
-                    travelMode: google.maps.TravelMode.DRIVING
-                }, function (response, status) {
-                    if (status === google.maps.DirectionsStatus.OK) {
-                        directionsDisplay.setDirections(response);
-                        var route = response.routes[0];
-                        var summaryPanel = document.getElementById('directions-panel');
-                        summaryPanel.innerHTML = '';
-                        // For each route, display summary information.
-                        for (var i = 0; i < route.legs.length; i++) {
-                            var routeSegment = i + 1;
-                            summaryPanel.innerHTML += '<b>Route Segment: ' + routeSegment +
-                                '</b><br>';
-                            summaryPanel.innerHTML += route.legs[i].start_address + ' to ';
-                            summaryPanel.innerHTML += route.legs[i].end_address + '<br>';
-                            summaryPanel.innerHTML += route.legs[i].distance.text + '<br><br>';
-                        }
-                    } else {
-                        window.alert('Directions request failed due to ' + status);
-                    }
-                });
             }
-        </script>*@
+
+            directionsService.route({
+                origin: document.getElementById('start').value,
+                destination: document.getElementById('end').value,
+                waypoints: waypts,
+                optimizeWaypoints: true,
+                travelMode: google.maps.TravelMode.DRIVING
+            }, function (response, status) {
+                if (status === google.maps.DirectionsStatus.OK) {
+                    directionsDisplay.setDirections(response);
+                    var route = response.routes[0];
+                    var summaryPanel = document.getElementById('directions-panel');
+                    summaryPanel.innerHTML = '';
+                    // For each route, display summary information.
+                    for (var i = 0; i < route.legs.length; i++) {
+                        var routeSegment = i + 1;
+                        summaryPanel.innerHTML += '<b>Route Segment: ' + routeSegment +
+                            '</b><br>';
+                        summaryPanel.innerHTML += route.legs[i].start_address + ' to ';
+                        summaryPanel.innerHTML += route.legs[i].end_address + '<br>';
+                        summaryPanel.innerHTML += route.legs[i].distance.text + '<br><br>';
+                    }
+                } else {
+                    window.alert('Directions request failed due to ' + status);
+                }
+            });
+        }
+    </script>*@
 
 
