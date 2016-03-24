@@ -1,0 +1,308 @@
+﻿
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDpswHcF-6hQRysnIaTEdls4l8ATwq4x88"></script>
+
+
+<style>
+    #fvpp-blackout {
+        display: none;
+        z-index: 499;
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        background: #000;
+        opacity: 0.5;
+    }
+
+    #my-welcome-message {
+        display: none;
+        z-index: 500;
+        position: fixed;
+        width: 36%;
+        left: 30%;
+        top: 20%;
+        padding: 20px 2%;
+        font-family: Calibri, Arial, sans-serif;
+        background: #FFF;
+    }
+
+    #fvpp-close {
+        position: absolute;
+        top: 10px;
+        right: 20px;
+        cursor: pointer;
+    }
+
+    #fvpp-dialog h2 {
+        font-size: 2em;
+        margin: 0;
+    }
+
+    #fvpp-dialog p {
+        margin: 0;
+    }
+
+    body {
+        background: #3399ff !important;
+    }
+</style>
+
+
+<head>
+    <title>Bootstrap Example</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
+<body>
+
+    <div class="jumbotron">
+        <h1 style="color: #3399ff; text-align: center; font-size: 130px;" 1>Route Planner</h1>
+        <h2 style="text-align:center;">Get from <span style="font-weight:bold; color:#00bfff;font-weight:bold">A</span> to <span style="color:#33ff33;font-weight:bold">B</span> without the hastle</h2>
+        <h3 style="text-align:center; color:#ff3333"><del>No more struggling with maps</del></h3>
+        <div style=" text-align: center;">
+            <input type="button" class="btn btn-primary" value="Get Started" onclick="GetInfo();" />
+        </div>
+
+        <div style="text-align:center">
+            <input type="button" class="btn btn-info" id="btnInstructions" value="Instructions" />
+        </div>
+    </div>
+    <div class="row" style="background: #f2f2f2; padding-bottom:20px;">
+        <div class="col-md-4">
+            <h2 style="color:#33ff33; font-weight:bold;" title="Select the start location for your journey from the list below">Starting Location</h2>
+            <select class="form-control" id="lstStart">
+                <option value="Sligo, Ireland">Sligo, Ireland</option>
+                <option value="Cork, Ireland">Cork, Ireland</option>
+                <option value="Galway, Ireland">Galway, Ireland</option>
+                <option value="Limrick, Ireland">Limrick, Ireland</option>
+                <option value="Dublin, Ireland">Dublin, Ireland</option>
+                <option value="Waterford, Ireland">Waterford, Ireland</option>
+                <option value="Kilkenny, Ireland">Kilkenny, Ireland</option>
+                <option value="Manhester, England">Manhester, England</option>
+                <option value="Liverpool, England">Liverpool, England</option>
+                <option value="London, England">London, England</option>
+            </select>
+        </div>
+
+        <div class="col-md-4">
+            <h2 style="color:#ffcc00; font-weight:bold;" title="You can use waypoints to calculate routes through additional locations">Waypoints</h2>
+            <i style="opacity: 0.7">(Ctrl-Click for multiple selection)</i>
+            <br>
+            <select multiple class="form-control" id="lstWaypoints">
+                <option value="Sligo, Ireland">Sligo, Ireland</option>
+                <option value="Cork, Ireland">Cork, Ireland</option>
+                <option value="Galway, Ireland">Galway, Ireland</option>
+                <option value="Limrick, Ireland">Limrick, Ireland</option>
+                <option value="Dublin, Ireland">Dublin, Ireland</option>
+                <option value="Waterford, Ireland">Waterford, Ireland</option>
+                <option value="Kilkenny, Ireland">Kilkenny, Ireland</option>
+                <option value="Manhester, England">Manhester, England</option>
+                <option value="Liverpool, England">Liverpool, England</option>
+                <option value="London, England">London, England</option>
+            </select>
+        </div>
+
+        <div class="col-md-4">
+            <h2 style="color:#ff3333; font-weight:bold;" title="Select the end location of your journey from the list below">End Location</h2>
+            <select class="form-control" id="lstEnd">
+                <option value="London, England">London, England</option>
+                <option value="Liverpool, England">Liverpool, England</option>
+                <option value="Manhester, England">Manhester, England</option>
+                <option value="Kilkenny, Ireland">Kilkenny, Ireland</option>
+                <option value="Waterford, Ireland">Waterford, Ireland</option>
+                <option value="Dublin, Ireland">Dublin, Ireland</option>
+                <option value="Limrick, Ireland">Limrick, Ireland</option>
+                <option value="Galway, Ireland">Galway, Ireland</option>
+                <option value="Cork, Ireland">Cork, Ireland</option>
+                <option value="Sligo, Ireland">Sligo, Ireland</option>
+            </select>
+        </div>
+        <br />
+        <br />
+    </div>
+
+
+    <div class="row" style="background: #f2f2f2; padding-bottom:20px;">
+        <div style=" text-align: center;">
+            <button onclick="CheckIfSelected()" class="btn btn-success">Plan Route</button>
+        </div>
+
+        <br />
+
+        <div style=" text-align: center;">
+            <button onclick="ClearSelection()" class="btn btn-danger">Clear Selection</button>
+        </div>
+
+        <br />
+        <br />
+    </div>
+
+    <div id="MapContainer" class="row" style="background: #f2f2f2;" @*style="width: 750px;"*@>
+        <h1 style="text-align:center;" id="txtDirections"></h1>
+        <div id="map" style="width: 650px; height: 780px; float: left; margin-left:20px; margin-top: 20px; "></div>
+        <div id="dir" style="width: 350px; float: right; margin-right:40px; margin-top: 20px; margin-bottom: 20px;"></div>
+    </div>
+
+    @*Welcome Message*@
+    <div id="my-welcome-message" style="margin:auto">
+        <h1 style="text-align:center;">Welcome to <span style="color:#3399ff">Route Planner</span></h1>
+        <h2 style="text-align:center">A project by <span style="color:lightgreen">Cathal O'Donnell</span></h2>
+        <h4 style="text-align:center">This project uses the <span style="color:red">Google Directions API </span>to give a set of directions from one location to another</h4>
+    </div>
+
+    @*JQueryUI Dialog Modal*@
+    <div id="dialog" title="Instructions">
+        <h3>This is a basic guide on how to use this feature</h3>
+        <ol>
+            <li> Click the <span style="color: blue">Get Started </span>button to populate the select lists with items</li>
+            <li> Select the location from which your journey will begin from the <span style="color:#33ff33">Starting Location</span> list</li>
+            <li> If you have any waypoints that your journey must include, you can select these from the <span style="color:#ffcc00">Waypoints</span> list</li>
+            <li> Select your end location from the <span style="color:#ff3333">End Location</span> list</li>
+            <li> Click the <span style="color:lightgreen">Plan Route</span> button to generate your route</li>
+        </ol>
+    </div>
+
+</body>
+
+@section Scripts {
+    @*JQuery UI Styles*@
+    <link href="~/Content/themes/base/all.css" rel="stylesheet" />
+    <link href="~/Content/themes/base/theme.css" rel="stylesheet" />
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/JQueryUI")
+    @Scripts.Render("~/bundles/jqueryFirstVisitPopup")
+    <script type="text/javascript">
+
+        var webApiUri = "http://localhost:57424/api/employees/";
+
+        $(function () {
+            //Hide map container div on page load
+            $("#MapContainer").hide(),
+
+            //Have no locations selected on page load
+            $("#lstStart").prop('selectedIndex', -1),
+            $("#lstEnd").prop('selectedIndex', -1)
+        });
+
+
+        //Welcome Message
+        $('#my-welcome-message').firstVisitPopup({
+            cookieName: 'homepage1',
+            showAgainSelector: '#show-message'
+        });
+
+        //JQuery UI
+        $("#dialog").dialog({ autoOpen: false });
+
+        $('#btnInstructions').click(function () {
+            $('#dialog').dialog('open');
+        });
+
+        function GetInfo() {
+
+            //Clear lists of hard coded data
+            $('#lstStart').empty(),
+            $('#lstWaypoints').empty(),
+            $('#lstEnd').empty();
+
+            $.ajax(
+                {
+                    type: 'GET',
+                    url: webApiUri,
+                    dataType: "json",
+                    processData: true,
+                    success: function (data, status) {
+                        //Populate lists with data using api
+                        $.each(data, function (key, item) {
+                            $('<option>', { text: item.City }).appendTo('#lstStart'),
+                            $('<option>', { text: item.City }).appendTo('#lstWaypoints'),
+                            $('<option>', { text: item.City }).appendTo('#lstEnd');
+                        })
+                    },
+                    //Error Message
+                    error: function () { alert('Something went wrong, please try again later') }
+                })
+        };
+
+        function ClearSelection() {
+            //Clear selected list items
+            $("#lstStart").prop('selectedIndex', -1),
+            $("#lstEnd").prop('selectedIndex', -1)
+            $("#lstWaypoints").val([]);
+
+            //Hide map container div
+            $("#MapContainer").hide();
+        }
+
+        function CheckIfSelected() {
+            //Check if the user selected a start and end location
+            if ($("#lstStart")[0].selectedIndex <= 0 || ($("#lstEnd")[0].selectedIndex <= 0)) {
+
+                //Display error message
+                alert("You must select a start and end location first");
+            }
+            else
+                GetMap();
+        }
+
+        function GetMap() {
+
+            //Show Map div
+            $("#MapContainer").show();
+
+            //Clear last directions
+            document.getElementById('dir').innerHTML = "";
+            txtDirections.innerHTML = "";
+
+            var directionsService = new google.maps.DirectionsService();
+            var directionsDisplay = new google.maps.DirectionsRenderer();
+
+            //Get start and End locations that the user selected
+            var startLocation = document.getElementById('lstStart').value;
+            var endLocation = document.getElementById('lstEnd').value;
+
+
+            //Heading text
+            txtDirections.innerHTML = "Directions from " + "<span style='color: #33ff33'>" + startLocation + "</span>" + " to " + "<span style='color: #ff3333'>" + endLocation + "</span>";
+
+            //Waypoints
+            var waypts = [];
+            var checkboxArray = document.getElementById('lstWaypoints');
+
+            for (var i = 0; i < checkboxArray.length; i++) {
+                if (checkboxArray.options[i].selected) {
+                    waypts.push({
+                        location: checkboxArray[i].value,
+                        stopover: true
+                    });
+                }
+            }
+
+            var map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 7,
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+            });
+
+            directionsDisplay.setMap(map);
+            directionsDisplay.setPanel(document.getElementById('dir'));
+
+            //Map options
+            var request = {
+                origin: startLocation,
+                destination: endLocation,
+                waypoints: waypts,
+                optimizeWaypoints: true,
+                travelMode: google.maps.DirectionsTravelMode.DRIVING
+            };
+
+            directionsService.route(request, function (response, status) {
+                if (status == google.maps.DirectionsStatus.OK) {
+                    directionsDisplay.setDirections(response);
+                }
+            });
+        }
+    </script>
+}
