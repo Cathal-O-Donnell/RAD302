@@ -58,14 +58,13 @@
     <div class="jumbotron">
         <h1 style="color: #3399ff; text-align: center; font-size: 130px;" 1>Route Planner</h1>
         <h2 style="text-align:center;">Get from <span style="font-weight:bold; color:#00bfff;font-weight:bold">A</span> to <span style="color:#33ff33;font-weight:bold">B</span> without the hastle</h2>
-        <h3 style="text-align:center; color:#ff3333"><del>No more struggling with maps</del></h3>
-        <div style=" text-align: center;">
-            <input type="button" class="btn btn-primary" value="Get Started" onclick="GetInfo();" />
-        </div>
+        @*<div style=" text-align: center;">
+                <input type="button" class="btn btn-primary" value="Get Started" onclick="GetInfo();" />
+            </div>
 
-        <div style="text-align:center">
-            <input type="button" class="btn btn-info" id="btnInstructions" value="Instructions" />
-        </div>
+            <div style="text-align:center">
+                <input type="button" class="btn btn-info" id="btnInstructions" value="Instructions" />
+            </div>*@
     </div>
     <div class="row" style="background: #f2f2f2; padding-bottom:20px;">
         <div class="col-md-4">
@@ -181,9 +180,9 @@
             //Hide map container div on page load
             $("#MapContainer").hide(),
 
-            //Have no locations selected on page load
-            $("#lstStart").prop('selectedIndex', -1),
-            $("#lstEnd").prop('selectedIndex', -1)
+                //Have no locations selected on page load
+                $("#lstStart").prop('selectedIndex', -1),
+                $("#lstEnd").prop('selectedIndex', -1)
         });
 
 
@@ -204,8 +203,8 @@
 
             //Clear lists of hard coded data
             $('#lstStart').empty(),
-            $('#lstWaypoints').empty(),
-            $('#lstEnd').empty();
+                $('#lstWaypoints').empty(),
+                $('#lstEnd').empty();
 
             $.ajax(
                 {
@@ -217,8 +216,8 @@
                         //Populate lists with data using api
                         $.each(data, function (key, item) {
                             $('<option>', { text: item.City }).appendTo('#lstStart'),
-                            $('<option>', { text: item.City }).appendTo('#lstWaypoints'),
-                            $('<option>', { text: item.City }).appendTo('#lstEnd');
+                                $('<option>', { text: item.City }).appendTo('#lstWaypoints'),
+                                $('<option>', { text: item.City }).appendTo('#lstEnd');
                         })
                     },
                     //Error Message
@@ -228,8 +227,8 @@
 
         function ClearSelection() {
             //Clear selected list items
-            $("#lstStart").prop('selectedIndex', -1),
-            $("#lstEnd").prop('selectedIndex', -1)
+            $("#lstStart").prop('selectedIndex', -1);
+            $("#lstEnd").prop('selectedIndex', -1);
             $("#lstWaypoints").val([]);
 
             //Hide map container div
@@ -238,7 +237,7 @@
 
         function CheckIfSelected() {
             //Check if the user selected a start and end location
-            if ($("#lstStart")[0].selectedIndex <= 0 || ($("#lstEnd")[0].selectedIndex <= 0)) {
+            if ($("#lstStart")[0].selectedIndex < 0 || ($("#lstEnd")[0].selectedIndex < 0)) {
 
                 //Display error message
                 alert("You must select a start and end location first");
@@ -298,7 +297,7 @@
             };
 
             directionsService.route(request, function (response, status) {
-                if (status == google.maps.DirectionsStatus.OK) {
+                if (status === google.maps.DirectionsStatus.OK) {
                     directionsDisplay.setDirections(response);
                 }
 
